@@ -214,3 +214,5 @@ Data/*.json
 
 # Model artefacts tracked in git (all <10 MB — safe for GitHub)
 # models/*.pkl and models/*.png are committed intentionally
+frontend/node_modules/
+frontend/dist/

@@ -33,9 +33,18 @@ car-price-intelligence/
 │   └── mongo_setup.md           # Step-by-step Atlas + .env setup guide
 │
 ├── backend/
-│   └── agent.py                 # Tool-calling agent: GPT-4o-mini + 5 tools → BUY/WAIT/NEUTRAL
+│   ├── agent.py                 # Tool-calling agent: GPT-4o-mini + 5 tools → BUY/WAIT/NEUTRAL
+│   └── main.py                  # FastAPI: /api/cars /api/predict /api/market-overview /api/shap-importance
 │
-├── frontend/                    # React dashboard (coming Phase 6)
+├── frontend/                    # React + Vite + Tailwind + Recharts
+│   ├── src/
+│   │   ├── App.jsx              # Tab nav + AppContext (cross-tab car selection)
+│   │   ├── api.js               # axios wrappers
+│   │   └── components/
+│   │       ├── AnalyzeTab.jsx   # Car form → agent call → recommendation + chart + SHAP
+│   │       ├── MarketOverview.jsx # Metric cards + Best Buys table + seasonality chart
+│   │       └── HowItWorks.jsx   # Pipeline diagram + SHAP chart + model card + sources
+│   └── package.json
 └── .env                         # Local secrets — never committed
 ```
 
@@ -110,10 +119,8 @@ car-price-intelligence/
 | # | Status | Task | Output | Notes |
 |---|--------|------|--------|-------|
 | 5.1 | ✅ Done | Tool-calling analyst agent | `backend/agent.py` | GPT-4o-mini · 5 tools · BUY/WAIT/NEUTRAL rules |
-| 5.2 | ⬜ Todo | Scaffold FastAPI app | `backend/main.py` | routes, schemas, CORS |
-| 5.3 | ⬜ Todo | `/analyse` endpoint | JSON response | wraps `run_agent()` |
-| 5.4 | ⬜ Todo | `/predict` endpoint | JSON response | wraps `predict_price()` directly |
-| 5.5 | ⬜ Todo | Unit tests | `backend/tests/` | pytest |
+| 5.2 | ✅ Done | FastAPI app | `backend/main.py` | /api/cars · /api/predict · /api/market-overview · /api/shap-importance |
+| 5.3 | ⬜ Todo | Unit tests | `backend/tests/` | pytest |
 
 ---
 
@@ -121,11 +128,12 @@ car-price-intelligence/
 
 | # | Status | Task | Output | Notes |
 |---|--------|------|--------|-------|
-| 6.1 | ⬜ Todo | Scaffold React dashboard | `frontend/` | Vite / CRA |
-| 6.2 | ⬜ Todo | Price estimator form | UI component | calls `/predict` |
-| 6.3 | ⬜ Todo | Market trend chart | UI component | line chart, filterable |
-| 6.4 | ⬜ Todo | Buy-signal card | UI component | calls `/buy-signal` |
-| 6.5 | ⬜ Todo | Deploy (Vercel / Netlify) | live URL | — |
+| 6.1 | ✅ Done | Scaffold Vite + React + Tailwind + Recharts | `frontend/` | Vite proxy → :8000 |
+| 6.2 | ✅ Done | Analyze tab | `AnalyzeTab.jsx` | Cascade dropdowns · agent call · SHAP bullets · chart · reasoning steps |
+| 6.3 | ✅ Done | Market Overview tab | `MarketOverview.jsx` | Metric cards · Best Buys table · seasonality heatmap |
+| 6.4 | ✅ Done | How It Works tab | `HowItWorks.jsx` | Pipeline diagram · SHAP chart · model card · data sources |
+| 6.5 | ✅ Done | Cross-tab context | `AppContext` | Click Best Buy row → auto-loads Analyze tab |
+| 6.6 | ⬜ Todo | Deploy (Vercel / Netlify) | live URL | — |
 
 ---
 
@@ -154,21 +162,25 @@ car-price-intelligence/
 ## Quick-Start (local dev)
 
 ```bash
-# clone
 git clone <repo-url>
 cd car-price-intelligence
 
-# backend
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
+# 1 — Backend
+pip install fastapi uvicorn motor pymongo python-dotenv openai prophet xgboost shap joblib scikit-learn pandas numpy
+uvicorn backend.main:app --reload --port 8000
 
-# frontend
-cd ../frontend
+# 2 — Frontend (new terminal)
+cd frontend
 npm install
-npm run dev
+npm run dev        # → http://localhost:5173
+```
+
+Add `.env` to project root:
+```
+MONGO_URI=mongodb+srv://...
+OPENAI_API_KEY=sk-...
 ```
 
 ---
 
-*Last updated: 2026-02-21 — Phase 1 ✅ · Phase 4 ✅ · Phase 5.1 ✅ (agent)*
+*Last updated: 2026-02-21 — Phase 1 ✅ · Phase 4 ✅ · Phase 5 ✅ · Phase 6 ✅ (full stack)*
