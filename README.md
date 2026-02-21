@@ -32,7 +32,9 @@ car-price-intelligence/
 ├── docs/
 │   └── mongo_setup.md           # Step-by-step Atlas + .env setup guide
 │
-├── backend/                     # FastAPI app and ML logic (coming Phase 5)
+├── backend/
+│   └── agent.py                 # Tool-calling agent: GPT-4o-mini + 5 tools → BUY/WAIT/NEUTRAL
+│
 ├── frontend/                    # React dashboard (coming Phase 6)
 └── .env                         # Local secrets — never committed
 ```
@@ -103,14 +105,14 @@ car-price-intelligence/
 
 ---
 
-### Phase 5 — Backend (FastAPI)
+### Phase 5 — Backend
 
 | # | Status | Task | Output | Notes |
 |---|--------|------|--------|-------|
-| 5.1 | ⬜ Todo | Scaffold FastAPI project | `backend/` | routes, schemas, config |
-| 5.2 | ⬜ Todo | `/predict` endpoint | JSON response | accepts car features, returns price estimate |
-| 5.3 | ⬜ Todo | `/market-trend` endpoint | JSON response | price trend by make / region |
-| 5.4 | ⬜ Todo | `/buy-signal` endpoint | JSON response | buy-now-or-wait recommendation |
+| 5.1 | ✅ Done | Tool-calling analyst agent | `backend/agent.py` | GPT-4o-mini · 5 tools · BUY/WAIT/NEUTRAL rules |
+| 5.2 | ⬜ Todo | Scaffold FastAPI app | `backend/main.py` | routes, schemas, CORS |
+| 5.3 | ⬜ Todo | `/analyse` endpoint | JSON response | wraps `run_agent()` |
+| 5.4 | ⬜ Todo | `/predict` endpoint | JSON response | wraps `predict_price()` directly |
 | 5.5 | ⬜ Todo | Unit tests | `backend/tests/` | pytest |
 
 ---
@@ -169,4 +171,4 @@ npm run dev
 
 ---
 
-*Last updated: 2026-02-21 — Phase 1 done · Phase 4 model training notebook + utils ready*
+*Last updated: 2026-02-21 — Phase 1 ✅ · Phase 4 ✅ · Phase 5.1 ✅ (agent)*
