@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Large data files — store in Google Drive, not git
+Data/*.csv
+Data/*.parquet
+Data/*.json
+*.csv
