@@ -211,3 +211,5 @@ Data/*.csv
 Data/*.parquet
 Data/*.json
 *.csv
+models/*.pkl
+models/*.png

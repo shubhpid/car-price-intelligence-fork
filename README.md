@@ -16,8 +16,18 @@ car-price-intelligence/
 ├── Cleaning/
 │   └── craigslist_cleaning.ipynb  # Colab T4 data-cleaning notebook
 │
+├── notebooks/
+│   └── car_price_model.ipynb    # Colab T4 — feature eng + XGBoost + SHAP
+│
+├── models/                      # Trained artefacts (git-ignored, download from Colab)
+│   ├── car_price_model.pkl      # XGBoost regressor
+│   ├── feature_meta.pkl         # cat_codes + feature_names + geo medians
+│   ├── shap_data.pkl            # TreeExplainer + 500-row sample
+│   └── shap_summary.png         # SHAP bar chart
+│
 ├── scripts/
-│   └── mongo_ingest.py          # Ingest cleaned_cars.csv → MongoDB Atlas
+│   ├── mongo_ingest.py          # Ingest cleaned_cars.csv → MongoDB Atlas
+│   └── model_utils.py           # Shared feature eng + predict + explain_prediction()
 │
 ├── docs/
 │   └── mongo_setup.md           # Step-by-step Atlas + .env setup guide
@@ -84,11 +94,12 @@ car-price-intelligence/
 
 | # | Status | Task | Output | Notes |
 |---|--------|------|--------|-------|
-| 4.1 | ⬜ Todo | Baseline: median price predictor | metrics | MAE / RMSE benchmark |
-| 4.2 | ⬜ Todo | Train price regression model | model artefact | XGBoost / LightGBM |
-| 4.3 | ⬜ Todo | Evaluate & tune (CV + grid/random search) | metrics | R², RMSE, MAPE |
-| 4.4 | ⬜ Todo | Build "buy now vs wait" signal | signal logic | price trend + model residuals |
-| 4.5 | ⬜ Todo | Save model artefact | `backend/model/` | joblib / ONNX |
+| 4.1 | ✅ Done | Feature engineering | `notebooks/car_price_model.ipynb` Cell 1 | car_age, log_odometer, mileage_per_year, is_luxury, category codes; time-based 80/20 split |
+| 4.2 | ✅ Done | Train XGBoost regressor (T4 GPU) | `models/car_price_model.pkl` | n_estimators=500, lr=0.05, depth=6, early stopping |
+| 4.3 | ✅ Done | Evaluate on original $ scale | metrics | MAE / RMSE / MAPE printed in notebook |
+| 4.4 | ✅ Done | SHAP analysis + explain_prediction() | `models/shap_data.pkl` · `shap_summary.png` | Top-3 contributors per listing; imported by FastAPI |
+| 4.5 | ✅ Done | Shared model utilities | `scripts/model_utils.py` | predict_price() + explain_prediction() for backend |
+| 4.6 | ⬜ Todo | Build "buy now vs wait" signal | signal logic | price trend + model residuals |
 
 ---
 
@@ -158,4 +169,4 @@ npm run dev
 
 ---
 
-*Last updated: 2026-02-21 — Phase 1 complete (data cleaning + MongoDB ingest · 175 MB / 512 MB Atlas M0)*
+*Last updated: 2026-02-21 — Phase 1 done · Phase 4 model training notebook + utils ready*
