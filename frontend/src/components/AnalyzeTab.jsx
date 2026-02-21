@@ -240,9 +240,16 @@ export default function AnalyzeTab() {
               ) : (
                 <div className="flex items-center justify-center h-48 text-slate-400 text-sm">No historical data for this vehicle</div>
               )}
-              {fc?.seasonality_note && (
-                <p className="text-xs text-slate-500 mt-2 italic">{fc.seasonality_note}</p>
-              )}
+              <div className="flex items-center gap-2 mt-2">
+                {fc?.method && (
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${fc.method === 'prophet' ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {fc.method === 'prophet' ? '📈 Prophet forecast' : '📐 Linear extrapolation'}
+                  </span>
+                )}
+                {fc?.seasonality_note && (
+                  <p className="text-xs text-slate-400 italic">{fc.seasonality_note}</p>
+                )}
+              </div>
             </div>
 
             {/* Agent Reasoning Steps */}

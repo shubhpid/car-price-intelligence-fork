@@ -90,13 +90,33 @@ def run_forecast(make: str, model: str, year: int) -> dict:
     price_history = get_price_history(make, model, year)
     if not price_history or "error" in price_history[0]:
         return {"error": f"No price history for {year} {make} {model}"}
-    if len(price_history) < 3:
-        return {"error": f"Only {len(price_history)} months of data — need >= 3 for forecast"}
 
     df = pd.DataFrame(price_history)
     df["ds"] = pd.to_datetime(df["date"], format="%Y-%m", errors="coerce")
     df["y"]  = pd.to_numeric(df["avg_price"], errors="coerce")
     df = df.dropna(subset=["ds", "y"])
+
+    # ── Linear fallback for sparse data (1–2 months) ─────────────────────────
+    if len(df) < 3:
+        last_price  = float(df["y"].iloc[-1])
+        first_price = float(df["y"].iloc[0])
+        n_months    = max(1, len(df) - 1)
+        mom_rate    = (last_price - first_price) / first_price / n_months  # per-month rate
+
+        fc_30 = round(last_price * (1 + mom_rate), 2)
+        fc_90 = round(last_price * (1 + mom_rate * 3), 2)
+        pct_30 = round(mom_rate * 100, 2)
+
+        return {
+            "last_known_price":  round(last_price, 2),
+            "forecast_30d":      fc_30,
+            "forecast_90d":      fc_90,
+            "trend_direction":   "rising" if pct_30 > 0 else "falling",
+            "trend_pct_change":  pct_30,
+            "trend_pct_90d":     round(mom_rate * 3 * 100, 2),
+            "seasonality_note":  "Linear extrapolation (only 2 months of data — Prophet needs ≥ 3)",
+            "method":            "linear",
+        }
 
     m = Prophet(
         yearly_seasonality=True,
@@ -135,6 +155,7 @@ def run_forecast(make: str, model: str, year: int) -> dict:
         "trend_pct_change":   pct_30,
         "trend_pct_90d":      pct_90,
         "seasonality_note":   f"Prices expected to peak around {peak_month} in the forecast window",
+        "method":             "prophet",
     }
 
 
