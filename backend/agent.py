@@ -266,7 +266,19 @@ def run_price_prediction(
 
 
 def get_market_context(make: str, model: str, year: int) -> dict:
-    """Return inventory count, trend, price-vs-median, and regional range."""
+    """Return inventory count, trend, price-vs-median, and regional range.
+
+    Fallback chain when no make/model/year data exists in MongoDB:
+      1. Try global price_snapshots average for a market-wide price range.
+      2. If that's also empty, use CSV-derived industry averages.
+    price_vs_median_pct is left as 0.0 here; synthesize_recommendation
+    derives a proxy from XGBoost vs the industry average in that case.
+    """
+    # Industry-average constants derived from cleaned_cars.csv (328k listings)
+    _INDUSTRY_AVG  = 19_384.0
+    _INDUSTRY_MIN  =  7_995.0
+    _INDUSTRY_MAX  = 45_000.0
+
     make_l  = make.lower()
     model_l = model.lower()
     filter_ = {"make": make_l, "model": model_l, "year": year}
@@ -308,7 +320,23 @@ def get_market_context(make: str, model: str, year: int) -> dict:
         latest_avg  = recent[0].get("avg_price", overall_avg) if recent else overall_avg
         price_vs_median_pct = round((latest_avg - overall_avg) / overall_avg * 100, 2) if overall_avg else 0.0
     else:
-        min_price = max_price = 0.0
+        # No make-specific data — try global snapshot average for price range display
+        global_agg = list(_db["price_snapshots"].aggregate([
+            {"$group": {"_id": None,
+                        "avg": {"$avg": "$avg_price"},
+                        "mn":  {"$min": "$avg_price"},
+                        "mx":  {"$max": "$avg_price"}}},
+        ]))
+        if global_agg:
+            g = global_agg[0]
+            min_price = round(g["mn"], 2)
+            max_price = round(g["mx"], 2)
+        else:
+            # Pure industry fallback (no DB data at all)
+            min_price = _INDUSTRY_MIN
+            max_price = _INDUSTRY_MAX
+        # price_vs_median_pct stays 0.0 — synthesize_recommendation will derive
+        # a proxy from XGBoost predicted price vs _INDUSTRY_AVG
 
     return {
         "current_inventory_count": total_count,
@@ -456,6 +484,16 @@ def synthesize_recommendation(
 
     trend_pct  = float(effective_pct)
     pct_vs_med = float(price_vs_median_pct)
+
+    # ── No DB market context? Derive price_vs_median proxy from XGBoost ───────
+    # When inventory_trend == "unknown" and price_vs_median_pct == 0.0 the
+    # listings / price_snapshots collections have no data for this vehicle.
+    # Use XGBoost predicted price vs the CSV-derived industry average ($19,384)
+    # so BUY / WAIT signals can still fire meaningfully.
+    _INDUSTRY_AVG = 19_384.0
+    _no_db_ctx = (inventory_trend == "unknown" and pct_vs_med == 0.0 and float(predicted_price) > 0)
+    if _no_db_ctx:
+        pct_vs_med = round((float(predicted_price) - _INDUSTRY_AVG) / _INDUSTRY_AVG * 100, 2)
 
     # ── Core BUY / WAIT / NEUTRAL logic ──────────────────────────────────────
     if effective_trend == "rising" and pct_vs_med < 0:
