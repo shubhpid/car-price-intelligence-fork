@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 _ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(_ROOT))
 from backend.agent import run_agent
+from backend.car_catalog import CATALOG as _CAR_CATALOG
 
 load_dotenv(_ROOT / ".env")
 
@@ -188,7 +189,10 @@ async def cars():
         {"$project": {"_id": 0, "make": "$_id.make", "model": "$_id.model", "year": "$_id.year"}},
         {"$sort": {"make": 1, "model": 1, "year": -1}},
     ]
-    return await _db["listings"].aggregate(pipeline).to_list(5000)
+    db_results = await _db["listings"].aggregate(pipeline).to_list(5000)
+    # Fall back to the static catalog generated from the CSV when MongoDB
+    # listings collection is empty (e.g. ingest not yet run on this machine)
+    return db_results if db_results else _CAR_CATALOG
 
 
 # ── Predict / analyse ──────────────────────────────────────────────────────────
