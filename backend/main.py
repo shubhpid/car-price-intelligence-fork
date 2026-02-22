@@ -26,24 +26,17 @@ app = FastAPI(title="Car Price Intelligence API")
 @app.on_event("startup")
 async def _clean_stale_cache():
     """
-    Remove stale cached predictions:
-      1. Entries with a run_forecast error (old behaviour before linear-extrapolation fallback).
-      2. NEUTRAL entries where price is ≥10% below market median — these may now qualify as
-         BUY under the updated signal logic and should be re-analysed.
+    On every server restart:
+      1. Wipe ALL non-seed prediction cache entries so stale results
+         (wrong signals, bad forecasts, old logic) never linger.
+      2. Force-refresh all seed BUY opportunities so Tab-2 always has data.
+    This is intentional for the demo environment — analyses are fast enough
+    that re-running them on demand is preferable to serving stale results.
     """
-    r1 = await _db["predictions_cache"].delete_many(
-        {"tool_outputs.run_forecast.error": {"$exists": True}}
-    )
-    # Also clear any NEUTRAL entries that could flip to BUY under the new ≥10% rule.
-    # The price_vs_median_pct lives inside tool_outputs.get_market_context.
-    r2 = await _db["predictions_cache"].delete_many({
-        "recommendation": "NEUTRAL",
-        "is_seed": {"$ne": True},   # keep seed data
-        "tool_outputs.get_market_context.price_vs_median_pct": {"$lte": -10},
-    })
-    total = r1.deleted_count + r2.deleted_count
-    if total:
-        print(f"[startup] Purged {r1.deleted_count} forecast-error + {r2.deleted_count} stale-NEUTRAL cache entries")
+    r = await _db["predictions_cache"].delete_many({"is_seed": {"$ne": True}})
+    print(f"[startup] Cleared {r.deleted_count} stale prediction cache entries")
+    seeded = await _seed_market_data(force=True)
+    print(f"[startup] Refreshed {seeded} seed BUY entries")
 
 
 app.add_middleware(
@@ -308,40 +301,28 @@ async def market_overview():
     if seed_count < len(_SEED_BUYS):
         await _seed_market_data(force=False)   # fills any missing seeds
 
-    # ── Avg price: prefer real prediction data over old DB snapshots ──────────
-    # Real predictions are from actual user queries — much more current/reliable
-    # than the 2021 Craigslist snapshot data.
-    pred_agg = await _db["predictions_cache"].aggregate([
-        {"$match": {"predicted_price": {"$gt": 0}}},
+    # ── Avg price: seed avg as stable baseline; real predictions update it live ─
+    # We deliberately ignore price_snapshots (2021 Craigslist data → corrupt).
+    seed_agg = await _db["predictions_cache"].aggregate([
+        {"$match": {"is_seed": True, "predicted_price": {"$gt": 0}}},
+        {"$group": {"_id": None, "avg": {"$avg": "$predicted_price"}}},
+    ]).to_list(1)
+    seed_avg = round(seed_agg[0]["avg"], 2) if seed_agg else _INDUSTRY_AVG_PRICE
+
+    real_agg = await _db["predictions_cache"].aggregate([
+        {"$match": {"is_seed": {"$ne": True}, "predicted_price": {"$gt": 0}}},
         {"$group": {"_id": None, "avg": {"$avg": "$predicted_price"}, "count": {"$sum": 1}}},
     ]).to_list(1)
 
-    if pred_agg and pred_agg[0]["count"] >= 3:
-        # Enough real predictions — use them as the price baseline
-        avg_now = round(pred_agg[0]["avg"], 2)
-        # Compute a synthetic MoM: compare seed avg vs non-seed avg if both exist
-        seed_agg = await _db["predictions_cache"].aggregate([
-            {"$match": {"is_seed": True, "predicted_price": {"$gt": 0}}},
-            {"$group": {"_id": None, "avg": {"$avg": "$predicted_price"}}},
-        ]).to_list(1)
-        real_agg = await _db["predictions_cache"].aggregate([
-            {"$match": {"is_seed": {"$ne": True}, "predicted_price": {"$gt": 0}}},
-            {"$group": {"_id": None, "avg": {"$avg": "$predicted_price"}}},
-        ]).to_list(1)
-        if seed_agg and real_agg:
-            s_avg = seed_agg[0]["avg"] or avg_now
-            r_avg = real_agg[0]["avg"] or avg_now
-            mom_pct = round((r_avg - s_avg) / s_avg * 100, 2) if s_avg else _INDUSTRY_MOM_PCT
-            # Clamp to sensible display range
-            mom_pct = max(-15.0, min(15.0, mom_pct))
-        else:
-            mom_pct = _INDUSTRY_MOM_PCT
+    if real_agg and real_agg[0]["count"] >= 1:
+        real_avg  = round(real_agg[0]["avg"], 2)
+        # Weighted blend: seed baseline (70%) + live predictions (30%)
+        avg_now   = round(0.7 * seed_avg + 0.3 * real_avg, 2)
+        mom_pct   = round(max(-10.0, min(10.0, (real_avg - seed_avg) / seed_avg * 100)), 2)
         price_source = "predictions"
     else:
-        # Fall back to industry constants — ignore DB snapshots entirely when
-        # they contain old/corrupt data (e.g. 2021 Craigslist with +164 % MoM).
-        avg_now  = _INDUSTRY_AVG_PRICE
-        mom_pct  = _INDUSTRY_MOM_PCT
+        avg_now      = seed_avg
+        mom_pct      = _INDUSTRY_MOM_PCT
         price_source = "industry"
 
     # ── Top BUY opportunities (seeds + real predictions, sorted by price) ────

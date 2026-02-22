@@ -10,7 +10,7 @@ import {
   Thermometer, ArrowRight, AlertCircle, RefreshCw,
   Sparkles, Database, MapPin, BarChart2, Info,
 } from 'lucide-react'
-import { getMarketOverview, seedMarket } from '../api'
+import { getMarketOverview, seedMarket, clearCache } from '../api'
 import { US_STATE_DATA } from '../data/usMapData'
 
 const MONTH_NAMES = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -380,6 +380,7 @@ export default function MarketPage() {
   const [loading,       setLoading]       = useState(true)
   const [error,         setError]         = useState(null)
   const [seeding,       setSeeding]       = useState(false)
+  const [clearing,      setClearing]      = useState(false)
   const [selectedState, setSelectedState] = useState(null)
   const navigate = useNavigate()
 
@@ -405,6 +406,19 @@ export default function MarketPage() {
       console.error('Seed failed', e)
     } finally {
       setSeeding(false)
+    }
+  }
+
+  async function handleClearCache() {
+    setClearing(true)
+    try {
+      await clearCache()
+      await seedMarket()   // re-seed immediately after clearing
+      await loadMarket()
+    } catch (e) {
+      console.error('Clear failed', e)
+    } finally {
+      setClearing(false)
     }
   }
 
@@ -526,16 +540,25 @@ export default function MarketPage() {
                 Click any row to run a full AI analysis · Sorted by lowest predicted price
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {hasSeedData && (
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-slate-700/50 px-3 py-1.5 rounded-lg">
                   <Database size={11} />
-                  Includes pre-seeded data · Run analyses to add real results
+                  Includes pre-seeded data
                 </div>
               )}
               <button
+                onClick={handleClearCache}
+                disabled={clearing || seeding}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-red-600/40 text-red-400 hover:text-white hover:border-red-400 transition-colors disabled:opacity-50"
+                title="Wipe all cached predictions and re-seed fresh data"
+              >
+                <RefreshCw size={11} className={clearing ? 'animate-spin' : ''} />
+                {clearing ? 'Clearing…' : 'Reset & Reseed'}
+              </button>
+              <button
                 onClick={handleReseed}
-                disabled={seeding}
+                disabled={seeding || clearing}
                 className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-slate-600 text-slate-400 hover:text-white hover:border-slate-400 transition-colors disabled:opacity-50"
               >
                 <RefreshCw size={11} className={seeding ? 'animate-spin' : ''} />
