@@ -220,3 +220,4 @@ frontend/dist/
 # Local demo / judge notes — keep off remote
 DEMO_PAIRS.md
 .claude/
+docs/arch-diagram-design.txt
