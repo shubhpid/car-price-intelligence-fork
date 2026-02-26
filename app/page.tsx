@@ -1,5 +1,6 @@
 "use client"
 
+// Libraries newly added: @/lib/car-catalog, @/lib/us-map-data
 import { useState, useEffect, useMemo } from "react"
 import {
   ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid,
@@ -379,7 +380,7 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
   )
 }
 
-/* ── Main Component ─────────────────────────────────────────────────���─���────── */
+/* ── Main Component ─────────────────────────────────────────────────���─����────── */
 export default function AnalyzePage() {
   const [form, setForm] = useState({ make: "", model: "", year: "", mileage: 50000, condition: "good", region: "california" })
   const [result, setResult] = useState<any>(null)
