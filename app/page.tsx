@@ -11,7 +11,6 @@ import {
   Sparkles, Car, Database, Scale, BarChart2,
   Shield, Eye, Zap, ChevronRight,
 } from "lucide-react"
-// @ts-nocheck
 import { CAR_CATALOG } from "@/lib/car-catalog"
 
 /* ── Constants ─────────────────────────────────────────────────────────────── */
@@ -380,7 +379,7 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
   )
 }
 
-/* ── Main Component ───────────────────────────────────────────────────���────── */
+/* ── Main Component ─────────────────────────────────────────────────���─���────── */
 export default function AnalyzePage() {
   const [form, setForm] = useState({ make: "", model: "", year: "", mileage: 50000, condition: "good", region: "california" })
   const [result, setResult] = useState<any>(null)

@@ -7,7 +7,6 @@ import {
   Tooltip as ReTooltip, Cell, ResponsiveContainer,
 } from "recharts"
 import { MapPin, BarChart2, Info } from "lucide-react"
-// @ts-nocheck
 import { US_STATE_DATA } from "@/lib/us-map-data"
 
 const MAKE_COLORS: Record<string, string> = {
