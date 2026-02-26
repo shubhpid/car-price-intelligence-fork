@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "CarIntel AI - Car Price Intelligence",
+  title: "Vroomly - Car Price Intelligence",
   description:
     "AI-powered car price analysis, market trends, and decision intelligence for smarter vehicle purchases.",
 }

@@ -35,7 +35,7 @@ export default function Navbar() {
               <Car size={15} className="text-card" />
             </div>
             <span className="text-base font-semibold text-foreground tracking-tight">
-              Car<span className="text-accent">Intel</span>
+              Vroom<span className="text-accent">ly</span>
             </span>
             <span className="hidden sm:block text-[10px] text-muted-foreground border border-border px-1.5 py-0.5 rounded-full font-medium">
               AI
