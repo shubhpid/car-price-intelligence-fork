@@ -1,0 +1,9 @@
+{
+  "name": "car-price-intelligence",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && npm install && npx vite --port 3000 --host",
+    "build": "cd frontend && npm run build",
+    "preview": "cd frontend && npm run preview"
+  }
+}
