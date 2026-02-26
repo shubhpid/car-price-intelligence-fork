@@ -54,7 +54,7 @@ const TOP_MAKES = [
   { make: "GMC", share: 5.4, avg_price: 27400, change: -0.8, color: "#22c55e" },
   { make: "Hyundai", share: 4.8, avg_price: 18100, change: +1.8, color: "#a78bfa" },
   { make: "Ram", share: 4.2, avg_price: 28200, change: -1.6, color: "#6366f1" },
-  { make: "Other", share: 11.3, avg_price: 19800, change: +0.2, color: "#71717a" },
+  { make: "Other", share: 11.3, avg_price: 19800, change: +0.2, color: "#78716c" },
 ]
 
 const SEGMENTS = [
@@ -82,8 +82,8 @@ const MAKE_TRENDS_12M = [
 ]
 
 const tooltipStyle = {
-  contentStyle: { background: "#0a0a0a", border: "1px solid #27272a", borderRadius: "8px", fontSize: 12 },
-  labelStyle: { color: "#fafafa" },
+  contentStyle: { background: "#faf7f2", border: "1px solid #ddd5c6", borderRadius: "8px", fontSize: 12 },
+  labelStyle: { color: "#1a1611" },
 }
 
 export default function MarketTrendsPage() {
@@ -105,14 +105,14 @@ export default function MarketTrendsPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
             {[
-              { label: "Avg Used Car Price (2024)", value: "$19,644", sub: "Down 30% from 2021 peak", color: "text-accent-foreground" },
-              { label: "MoM Change (Dec 24)", value: "-0.8%", sub: "Softening demand", color: "text-red-400" },
-              { label: "Total Active Listings", value: "4.2M", sub: "Nationwide inventory", color: "text-emerald-400" },
-              { label: "Used vs New Spread", value: "$25.4k", sub: "New avg: $45,000", color: "text-zinc-300" },
+              { label: "Avg Used Car Price (2024)", value: "$19,644", sub: "Down 30% from 2021 peak", color: "text-accent" },
+              { label: "MoM Change (Dec 24)", value: "-0.8%", sub: "Softening demand", color: "text-red-700" },
+              { label: "Total Active Listings", value: "4.2M", sub: "Nationwide inventory", color: "text-emerald-700" },
+              { label: "Used vs New Spread", value: "$25.4k", sub: "New avg: $45,000", color: "text-foreground" },
             ].map(({ label, value, sub, color }) => (
               <div key={label} className="bg-card border border-border rounded-xl p-4">
                 <p className={`text-2xl font-bold ${color}`}>{value}</p>
-                <p className="text-zinc-300 text-xs font-medium mt-0.5">{sub}</p>
+                <p className="text-foreground text-xs font-medium mt-0.5">{sub}</p>
                 <p className="text-muted-foreground text-xs mt-1">{label}</p>
               </div>
             ))}
@@ -132,7 +132,7 @@ export default function MarketTrendsPage() {
               {[{ key: "both", label: "Both" }, { key: "used", label: "Used Only" }, { key: "new", label: "New Only" }].map(opt => (
                 <button key={opt.key} onClick={() => setChartView(opt.key)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    chartView === opt.key ? "bg-accent/15 text-accent-foreground border border-accent/25" : "bg-muted text-muted-foreground hover:bg-zinc-800 border border-border"
+                    chartView === opt.key ? "bg-amber-100 text-accent border border-amber-300" : "bg-muted text-muted-foreground hover:bg-stone-200 border border-border"
                   }`}>{opt.label}</button>
               ))}
             </div>
@@ -149,14 +149,14 @@ export default function MarketTrendsPage() {
                   <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-              <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#71717a" }} interval={3} />
-              <YAxis tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#71717a" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" />
+              <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#78716c" }} interval={3} />
+              <YAxis tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#78716c" }} />
               <Tooltip {...tooltipStyle} formatter={(v: any) => [`$${Number(v).toLocaleString()}`, ""]} />
               <ReferenceLine x="Jul 21" stroke="#ef4444" strokeDasharray="4 4" label={{ value: "Peak", fontSize: 9, fill: "#ef4444", position: "top" }} />
               {chartView !== "new" && <Area type="monotone" dataKey="used" stroke="#3b82f6" fill="url(#usedGrad)" strokeWidth={2} name="Used car avg" dot={false} />}
               {chartView !== "used" && <Area type="monotone" dataKey="newCar" stroke="#f97316" fill="url(#newGrad)" strokeWidth={2} name="New car avg" dot={false} />}
-              <Legend wrapperStyle={{ color: "#71717a", fontSize: 11 }} />
+              <Legend wrapperStyle={{ color: "#78716c", fontSize: 11 }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -168,15 +168,15 @@ export default function MarketTrendsPage() {
             <p className="text-muted-foreground text-sm mb-4">Jeep leads appreciation; Honda steady; Ford/Toyota stable</p>
             <ResponsiveContainer width="100%" height={280}>
               <LineChart data={MAKE_TRENDS_12M} margin={{ top: 4, right: 8, bottom: 0, left: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#71717a" }} />
-                <YAxis tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#71717a" }} domain={["auto", "auto"]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#78716c" }} />
+                <YAxis tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#78716c" }} domain={["auto", "auto"]} />
                 <Tooltip {...tooltipStyle} formatter={(v: any) => [`$${Number(v).toLocaleString()}`, ""]} />
                 <Line type="monotone" dataKey="ford" stroke="#3b82f6" strokeWidth={2} dot={false} name="Ford" />
                 <Line type="monotone" dataKey="toyota" stroke="#10b981" strokeWidth={2} dot={false} name="Toyota" />
                 <Line type="monotone" dataKey="honda" stroke="#ec4899" strokeWidth={2} dot={false} name="Honda" />
                 <Line type="monotone" dataKey="jeep" stroke="#f59e0b" strokeWidth={2} dot={false} name="Jeep" />
-                <Legend wrapperStyle={{ color: "#71717a", fontSize: 11 }} />
+                <Legend wrapperStyle={{ color: "#78716c", fontSize: 11 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -185,9 +185,9 @@ export default function MarketTrendsPage() {
             <p className="text-muted-foreground text-sm mb-4">EVs still premium-priced; trucks remain highest ICE segment</p>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={SEGMENTS} layout="vertical" margin={{ left: 10, right: 40 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={false} />
-                <XAxis type="number" tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#71717a" }} />
-                <YAxis type="category" dataKey="segment" width={70} tick={{ fontSize: 11, fill: "#d4d4d8" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" horizontal={false} />
+                <XAxis type="number" tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#78716c" }} />
+                <YAxis type="category" dataKey="segment" width={70} tick={{ fontSize: 11, fill: "#1a1611" }} />
                 <Tooltip {...tooltipStyle} formatter={(v: any) => [`$${Number(v).toLocaleString()}`, "Avg price"]} />
                 <Bar dataKey="avg" radius={[0, 4, 4, 0]}>
                   {SEGMENTS.map((s, i) => <Cell key={i} fill={s.color} />)}
@@ -209,9 +209,9 @@ export default function MarketTrendsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <ResponsiveContainer width="100%" height={480}>
               <BarChart data={REGIONAL_PRICES} layout="vertical" margin={{ left: 10, right: 60 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={false} />
-                <XAxis type="number" tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#71717a" }} domain={[12000, "auto"]} />
-                <YAxis type="category" dataKey="region" width={110} tick={{ fontSize: 11, fill: "#d4d4d8" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" horizontal={false} />
+                <XAxis type="number" tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#78716c" }} domain={[12000, "auto"]} />
+                <YAxis type="category" dataKey="region" width={110} tick={{ fontSize: 11, fill: "#1a1611" }} />
                 <Tooltip {...tooltipStyle} formatter={(v: any) => [`$${Number(v).toLocaleString()}`, "Avg price"]} />
                 <Bar dataKey="avg" radius={[0, 4, 4, 0]}>
                   {REGIONAL_PRICES.map((r, i) => <Cell key={i} fill={r.color} />)}
@@ -223,11 +223,11 @@ export default function MarketTrendsPage() {
                 <div key={r.region} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border">
                   <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: r.color }} />
                   <span className="text-foreground text-sm flex-1">{r.region}</span>
-                  <span className="text-zinc-300 font-bold">${r.avg.toLocaleString()}</span>
-                  <span className={`text-xs font-semibold w-12 text-right ${r.change > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  <span className="text-foreground font-bold">${r.avg.toLocaleString()}</span>
+                  <span className={`text-xs font-semibold w-12 text-right ${r.change > 0 ? "text-emerald-700" : "text-red-700"}`}>
                     {r.change > 0 ? "+" : ""}{r.change}%
                   </span>
-                  <span className="text-zinc-600 text-xs">{(r.listings/1000).toFixed(1)}k</span>
+                  <span className="text-muted-foreground text-xs">{(r.listings/1000).toFixed(1)}k</span>
                 </div>
               ))}
             </div>
@@ -240,12 +240,12 @@ export default function MarketTrendsPage() {
           <p className="text-muted-foreground text-sm mb-5">Ford leads with 18.2% of all used car listings; Toyota second at 16.4%</p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {TOP_MAKES.map(m => (
-              <div key={m.make} className="bg-muted/50 border border-border rounded-xl p-4 text-center hover:border-zinc-600 transition-colors">
+              <div key={m.make} className="bg-muted/50 border border-border rounded-xl p-4 text-center hover:border-stone-400 transition-colors">
                 <div className="w-2 h-2 rounded-full mx-auto mb-2" style={{ background: m.color }} />
                 <p className="text-foreground font-bold">{m.make}</p>
                 <p className="text-2xl font-bold mt-1" style={{ color: m.color }}>{m.share}%</p>
                 <p className="text-muted-foreground text-xs mt-1">${m.avg_price.toLocaleString()}</p>
-                <p className={`text-xs font-semibold mt-0.5 ${m.change > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                <p className={`text-xs font-semibold mt-0.5 ${m.change > 0 ? "text-emerald-700" : "text-red-700"}`}>
                   {m.change > 0 ? "+" : ""}{m.change}% MoM
                 </p>
               </div>

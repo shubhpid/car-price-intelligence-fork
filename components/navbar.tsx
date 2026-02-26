@@ -27,15 +27,15 @@ export default function Navbar() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center group-hover:bg-blue-400 transition-colors">
-              <Car size={15} className="text-foreground" />
+            <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center group-hover:bg-amber-600 transition-colors">
+              <Car size={15} className="text-card" />
             </div>
             <span className="text-base font-semibold text-foreground tracking-tight">
-              Car<span className="text-accent-foreground">Intel</span>
+              Car<span className="text-accent">Intel</span>
             </span>
             <span className="hidden sm:block text-[10px] text-muted-foreground border border-border px-1.5 py-0.5 rounded-full font-medium">
               AI

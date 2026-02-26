@@ -14,7 +14,7 @@ const MAKE_COLORS: Record<string, string> = {
   ford: "#3b82f6", chevrolet: "#ef4444", toyota: "#10b981", honda: "#f97316",
   gmc: "#eab308", ram: "#8b5cf6", nissan: "#06b6d4", jeep: "#f59e0b",
   subaru: "#6366f1", hyundai: "#ec4899", dodge: "#84cc16", kia: "#14b8a6",
-  bmw: "#a78bfa", default: "#71717a",
+  bmw: "#a78bfa", default: "#78716c",
 }
 const makeColor = (make: string) => MAKE_COLORS[(make || "").toLowerCase()] || MAKE_COLORS.default
 
@@ -27,8 +27,8 @@ const nameToAbbr: Record<string, string> = Object.entries(stateData).reduce((acc
 const TOP_MAKES = [...new Set(Object.values(stateData).map((d: any) => d.top_make))].sort() as string[]
 
 const tooltipStyle = {
-  contentStyle: { background: "#0a0a0a", border: "1px solid #27272a", borderRadius: "8px", fontSize: 12 },
-  labelStyle: { color: "#fafafa" },
+  contentStyle: { background: "#faf7f2", border: "1px solid #ddd5c6", borderRadius: "8px", fontSize: 12 },
+  labelStyle: { color: "#1a1611" },
 }
 
 // National summary stats
@@ -66,15 +66,15 @@ function USManufacturerMap({ onStateSelect, selectedState }: { onStateSelect: (s
               const abbr = nameToAbbr[geo.properties.name]
               const st = abbr ? stateData[abbr] : null
               const topMake = st?.top_make
-              const color = topMake ? makeColor(topMake) : "#27272a"
+              const color = topMake ? makeColor(topMake) : "#ddd5c6"
               const isSelected = abbr === selectedState
               return (
                 <Geography key={geo.rsmKey} geography={geo}
-                  fill={isSelected ? "#ffffff" : color} fillOpacity={isSelected ? 1 : 0.75}
-                  stroke={isSelected ? "#ffffff" : "#09090b"} strokeWidth={isSelected ? 2 : 0.5}
+                  fill={isSelected ? "#1a1611" : color} fillOpacity={isSelected ? 1 : 0.75}
+                  stroke={isSelected ? "#1a1611" : "#f5f0e8"} strokeWidth={isSelected ? 2 : 0.5}
                   style={{
                     default: { outline: "none", cursor: "pointer" },
-                    hover: { outline: "none", fillOpacity: 1, strokeWidth: 1.5, stroke: "#d4d4d8" },
+                    hover: { outline: "none", fillOpacity: 1, strokeWidth: 1.5, stroke: "#78716c" },
                     pressed: { outline: "none" },
                   }}
                   onMouseEnter={(e: any) => handleMouseEnter(geo, e)}
@@ -94,20 +94,20 @@ function USManufacturerMap({ onStateSelect, selectedState }: { onStateSelect: (s
           <p className="font-bold text-foreground text-sm mb-1">{ttData.name}</p>
           <p className="text-muted-foreground mb-2">
             Avg price: <span className="text-accent-foreground font-semibold">${ttData.avg_price.toLocaleString()}</span>
-            <span className="text-zinc-600 ml-2">{"/"}</span>
+            <span className="text-muted-foreground/70 ml-2">{"/"}</span>
             <span className="text-muted-foreground ml-2">{ttData.total_listings.toLocaleString()} listings</span>
           </p>
-          <p className="text-zinc-500 text-[10px] uppercase font-semibold tracking-wide mb-1">Top Manufacturers</p>
+          <p className="text-muted-foreground text-[10px] uppercase font-semibold tracking-wide mb-1">Top Manufacturers</p>
           {ttData.top3.map((m: any, i: number) => (
             <div key={i} className="flex items-center gap-2 mb-0.5">
               <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: makeColor(m.make) }} />
-              <span className="capitalize text-zinc-300 flex-1">{m.make}</span>
-              <span className="text-zinc-500">{m.count.toLocaleString()}</span>
-              <span className="text-zinc-600">{"/"}</span>
-              <span className="text-muted-foreground">${m.avg_price.toLocaleString()}</span>
+              <span className="capitalize text-foreground flex-1">{m.make}</span>
+              <span className="text-muted-foreground">{m.count.toLocaleString()}</span>
+              <span className="text-border">{"/"}</span>
+              <span className="text-foreground/70">${m.avg_price.toLocaleString()}</span>
             </div>
           ))}
-          <p className="text-zinc-600 text-[10px] mt-2">Click to explore in playground</p>
+          <p className="text-muted-foreground text-[10px] mt-2">Click to explore in playground</p>
         </div>
       )}
 
@@ -170,7 +170,7 @@ function StatePlayground({ initialState }: { initialState: string | null }) {
       </div>
 
       {!sd && (
-        <div className="flex flex-col items-center justify-center h-52 text-zinc-600 gap-3">
+        <div className="flex flex-col items-center justify-center h-52 text-muted-foreground/70 gap-3">
           <MapPin size={36} className="opacity-20" />
           <p className="text-sm">Select a state or click the map to explore</p>
         </div>
@@ -188,7 +188,7 @@ function StatePlayground({ initialState }: { initialState: string | null }) {
               <div key={label} className="bg-muted/50 border border-border rounded-lg p-3 text-center">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{label}</p>
                 <p className="text-lg font-bold text-foreground mt-0.5">{value}</p>
-                <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>
+                <p className="text-[10px] text-muted-foreground/70 mt-0.5">{sub}</p>
               </div>
             ))}
           </div>
@@ -198,9 +198,9 @@ function StatePlayground({ initialState }: { initialState: string | null }) {
               <p className="text-sm font-semibold text-foreground mb-3">Avg Price by Manufacturer</p>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={priceData} margin={{ left: 8, right: 8, top: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#a1a1aa" }} />
-                  <YAxis tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#71717a" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#78716c" }} />
+                  <YAxis tickFormatter={(v: number) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "#78716c" }} />
                   <ReTooltip {...tooltipStyle} formatter={(v: any) => [`$${Number(v).toLocaleString()}`, "Avg Price"]} />
                   <Bar dataKey="avg_price" radius={[5, 5, 0, 0]}>
                     {priceData.map((d: any, i: number) => (
@@ -214,9 +214,9 @@ function StatePlayground({ initialState }: { initialState: string | null }) {
               <p className="text-sm font-semibold text-foreground mb-3">Listing Count by Manufacturer</p>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={priceData} margin={{ left: 8, right: 8, top: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#a1a1aa" }} />
-                  <YAxis tick={{ fontSize: 10, fill: "#71717a" }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#78716c" }} />
+                  <YAxis tick={{ fontSize: 10, fill: "#78716c" }} />
                   <ReTooltip {...tooltipStyle} formatter={(v: any) => [Number(v).toLocaleString(), "Listings"]} />
                   <Bar dataKey="listings" radius={[5, 5, 0, 0]}>
                     {priceData.map((d: any, i: number) => (
@@ -243,7 +243,7 @@ function StatePlayground({ initialState }: { initialState: string | null }) {
                   </div>
                   <p className="text-xl font-extrabold text-foreground">${m.avg_price.toLocaleString()}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">{m.count.toLocaleString()} listings / {pct}% of state</p>
-                  <div className="mt-2 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="mt-2 h-1.5 bg-border rounded-full overflow-hidden">
                     <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, background: makeColor(m.make) }} />
                   </div>
                 </div>

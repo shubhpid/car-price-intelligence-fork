@@ -19,11 +19,11 @@ const CONDITIONS = ["excellent", "good", "fair", "salvage"]
 const REGIONS = ["california", "texas", "florida", "new york", "illinois", "ohio", "georgia"]
 
 const SIG_CFG: Record<string, { color: string; bg: string; border: string; Icon: any; label: string }> = {
-  "BUY NOW": { color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", Icon: TrendingUp, label: "Strong Buy Signal" },
-  "BUY":     { color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", Icon: TrendingUp, label: "Strong Buy Signal" },
-  "WAIT":    { color: "text-red-400",     bg: "bg-red-500/10",     border: "border-red-500/20",     Icon: TrendingDown, label: "Wait - Price Falling" },
-  "MONITOR": { color: "text-amber-400",   bg: "bg-amber-500/10",   border: "border-amber-500/20",   Icon: Minus, label: "Monitor the Market" },
-  "NEUTRAL": { color: "text-amber-400",   bg: "bg-amber-500/10",   border: "border-amber-500/20",   Icon: Minus, label: "Balanced Market" },
+  "BUY NOW": { color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", Icon: TrendingUp, label: "Strong Buy Signal" },
+  "BUY":     { color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", Icon: TrendingUp, label: "Strong Buy Signal" },
+  "WAIT":    { color: "text-red-700",     bg: "bg-red-50",     border: "border-red-200",     Icon: TrendingDown, label: "Wait - Price Falling" },
+  "MONITOR": { color: "text-amber-700",   bg: "bg-amber-50",   border: "border-amber-200",   Icon: Minus, label: "Monitor the Market" },
+  "NEUTRAL": { color: "text-amber-700",   bg: "bg-amber-50",   border: "border-amber-200",   Icon: Minus, label: "Balanced Market" },
 }
 
 const ANALYSIS_STAGES = [
@@ -51,15 +51,15 @@ const AGENT_ICONS: Record<string, any> = {
 
 /* ── Demo vehicles ─────────────────────────────────────────────────────────── */
 const DEMO_VEHICLES = [
-  { make: "toyota", model: "camry", year: 2020, mileage: 42000, condition: "good", region: "texas", tag: "MONITOR", tagColor: "text-amber-400", label: "Toyota Camry", desc: "Stable demand, balanced market", stat: "+0.8% / 90d" },
-  { make: "honda", model: "civic", year: 2020, mileage: 55000, condition: "good", region: "florida", tag: "BUY NOW", tagColor: "text-emerald-400", label: "Honda Civic", desc: "10% below market median", stat: "-10.2% vs median" },
-  { make: "ford", model: "f-150", year: 2019, mileage: 68000, condition: "good", region: "texas", tag: "WAIT", tagColor: "text-red-400", label: "Ford F-150", desc: "Truck prices softening nationally", stat: "-3.4% / 90d" },
-  { make: "jeep", model: "wrangler", year: 2020, mileage: 45000, condition: "good", region: "ohio", tag: "BUY NOW", tagColor: "text-emerald-400", label: "Jeep Wrangler", desc: "Rising demand, constrained inventory", stat: "+6.8% / 90d" },
-  { make: "bmw", model: "3 series", year: 2020, mileage: 48000, condition: "good", region: "new york", tag: "WAIT", tagColor: "text-red-400", label: "BMW 3 Series", desc: "Luxury segment softening", stat: "-2.8% / 90d" },
-  { make: "toyota", model: "tacoma", year: 2020, mileage: 38000, condition: "good", region: "california", tag: "BUY NOW", tagColor: "text-emerald-400", label: "Toyota Tacoma", desc: "Highest resale momentum", stat: "+7.4% / 90d" },
-  { make: "honda", model: "accord", year: 2020, mileage: 38000, condition: "good", region: "illinois", tag: "MONITOR", tagColor: "text-amber-400", label: "Honda Accord", desc: "Balanced supply and demand", stat: "+0.5% / 90d" },
-  { make: "chevrolet", model: "malibu", year: 2019, mileage: 65000, condition: "good", region: "ohio", tag: "WAIT", tagColor: "text-red-400", label: "Chevy Malibu", desc: "Sedan market declining", stat: "-4.2% / 90d" },
-  { make: "toyota", model: "rav4", year: 2020, mileage: 35000, condition: "good", region: "california", tag: "BUY NOW", tagColor: "text-emerald-400", label: "Toyota RAV4", desc: "SUV demand growing", stat: "+4.1% / 90d" },
+  { make: "toyota", model: "camry", year: 2020, mileage: 42000, condition: "good", region: "texas", tag: "MONITOR", tagColor: "text-amber-700", label: "Toyota Camry", desc: "Stable demand, balanced market", stat: "+0.8% / 90d" },
+  { make: "honda", model: "civic", year: 2020, mileage: 55000, condition: "good", region: "florida", tag: "BUY NOW", tagColor: "text-emerald-700", label: "Honda Civic", desc: "10% below market median", stat: "-10.2% vs median" },
+  { make: "ford", model: "f-150", year: 2019, mileage: 68000, condition: "good", region: "texas", tag: "WAIT", tagColor: "text-red-700", label: "Ford F-150", desc: "Truck prices softening nationally", stat: "-3.4% / 90d" },
+  { make: "jeep", model: "wrangler", year: 2020, mileage: 45000, condition: "good", region: "ohio", tag: "BUY NOW", tagColor: "text-emerald-700", label: "Jeep Wrangler", desc: "Rising demand, constrained inventory", stat: "+6.8% / 90d" },
+  { make: "bmw", model: "3 series", year: 2020, mileage: 48000, condition: "good", region: "new york", tag: "WAIT", tagColor: "text-red-700", label: "BMW 3 Series", desc: "Luxury segment softening", stat: "-2.8% / 90d" },
+  { make: "toyota", model: "tacoma", year: 2020, mileage: 38000, condition: "good", region: "california", tag: "BUY NOW", tagColor: "text-emerald-700", label: "Toyota Tacoma", desc: "Highest resale momentum", stat: "+7.4% / 90d" },
+  { make: "honda", model: "accord", year: 2020, mileage: 38000, condition: "good", region: "illinois", tag: "MONITOR", tagColor: "text-amber-700", label: "Honda Accord", desc: "Balanced supply and demand", stat: "+0.5% / 90d" },
+  { make: "chevrolet", model: "malibu", year: 2019, mileage: 65000, condition: "good", region: "ohio", tag: "WAIT", tagColor: "text-red-700", label: "Chevy Malibu", desc: "Sedan market declining", stat: "-4.2% / 90d" },
+  { make: "toyota", model: "rav4", year: 2020, mileage: 35000, condition: "good", region: "california", tag: "BUY NOW", tagColor: "text-emerald-700", label: "Toyota RAV4", desc: "SUV demand growing", stat: "+4.1% / 90d" },
 ]
 
 /* ── Static demo data helpers ──────────────────────────────────────────────── */
@@ -260,10 +260,10 @@ function ConfidenceGauge({ score }: { score: number }) {
   return (
     <div className="flex flex-col items-center">
       <svg width="100" height="58" viewBox="0 0 100 58">
-        <path d="M 10 52 A 40 40 0 0 1 90 52" fill="none" stroke="#27272a" strokeWidth="8" strokeLinecap="round" />
+        <path d="M 10 52 A 40 40 0 0 1 90 52" fill="none" stroke="#ddd5c6" strokeWidth="8" strokeLinecap="round" />
         <path d="M 10 52 A 40 40 0 0 1 90 52" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round"
           strokeDasharray={`${half} ${half}`} strokeDashoffset={offset} style={{ transition: "stroke-dashoffset 1.2s ease" }} />
-        <text x="50" y="50" textAnchor="middle" fill="white" fontSize="15" fontWeight="bold">{pct}%</text>
+        <text x="50" y="50" textAnchor="middle" fill="#1a1611" fontSize="15" fontWeight="bold">{pct}%</text>
       </svg>
       <p className="text-[10px] text-muted-foreground -mt-1">Confidence</p>
     </div>
@@ -274,11 +274,11 @@ function VolatilityMeter({ level }: { level: string }) {
   const idx = ["Low", "Moderate", "High"].indexOf(level)
   const colors = ["#10b981", "#f59e0b", "#ef4444"]
   const bars = [
-    { h: "h-3", fill: idx >= 0 ? colors[0] : "#27272a" },
-    { h: "h-5", fill: idx >= 1 ? colors[1] : "#27272a" },
-    { h: "h-7", fill: idx >= 2 ? colors[2] : "#27272a" },
+    { h: "h-3", fill: idx >= 0 ? colors[0] : "#ddd5c6" },
+    { h: "h-5", fill: idx >= 1 ? colors[1] : "#ddd5c6" },
+    { h: "h-7", fill: idx >= 2 ? colors[2] : "#ddd5c6" },
   ]
-  const activeColor = idx >= 0 ? colors[idx] : "#71717a"
+  const activeColor = idx >= 0 ? colors[idx] : "#78716c"
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="flex items-end gap-1">
@@ -287,7 +287,7 @@ function VolatilityMeter({ level }: { level: string }) {
         ))}
       </div>
       <p className="text-[10px] font-medium" style={{ color: activeColor }}>{level || "N/A"}</p>
-      <p className="text-[9px] text-zinc-600">Volatility</p>
+      <p className="text-[9px] text-muted-foreground">Volatility</p>
     </div>
   )
 }
@@ -301,26 +301,26 @@ function AgentReasoningLog({ agentLog }: { agentLog: any[] }) {
         const isLast = i === agentLog.length - 1
         return (
           <div key={i} className="flex gap-3 relative">
-            {!isLast && <div className="absolute left-[13px] top-7 bottom-0 w-px bg-zinc-800" />}
-            <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isOrch ? "bg-accent/20" : "bg-zinc-800"}`}>
-              <Icon size={13} className={isOrch ? "text-accent-foreground" : "text-zinc-400"} />
+            {!isLast && <div className="absolute left-[13px] top-7 bottom-0 w-px bg-border" />}
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isOrch ? "bg-amber-100" : "bg-muted"}`}>
+              <Icon size={13} className={isOrch ? "text-accent" : "text-muted-foreground"} />
             </div>
             <div className={`flex-1 ${isLast ? "pb-0" : "pb-3"}`}>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-semibold text-foreground">{entry.agent}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
-                  entry.status === "ok" ? "bg-emerald-500/15 text-emerald-400" :
-                  entry.status === "fallback" ? "bg-amber-500/15 text-amber-400" :
-                  "bg-red-500/15 text-red-400"
+                  entry.status === "ok" ? "bg-emerald-100 text-emerald-700" :
+                  entry.status === "fallback" ? "bg-amber-100 text-amber-700" :
+                  "bg-red-100 text-red-700"
                 }`}>{entry.status}</span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{entry.message}</p>
               {!isOrch && entry.output && Object.keys(entry.output).length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-1">
                   {Object.entries(entry.output).slice(0, 3).map(([k, v]) => (
-                    <span key={k} className="text-[10px] text-zinc-600">
-                      <span className="text-zinc-500">{k.replace(/_/g, " ")}: </span>
-                      <span className="text-zinc-400">{typeof v === "number" ? (Math.abs(v) >= 1000 ? `$${Number(v).toLocaleString()}` : String(v)) : String(v)}</span>
+                    <span key={k} className="text-[10px] text-muted-foreground">
+                      <span className="text-muted-foreground/70">{k.replace(/_/g, " ")}: </span>
+                      <span className="text-foreground/70">{typeof v === "number" ? (Math.abs(v) >= 1000 ? `$${Number(v).toLocaleString()}` : String(v)) : String(v)}</span>
                     </span>
                   ))}
                 </div>
@@ -338,7 +338,7 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
   const scenario = SCENARIOS.find(s => s.key === active)
   const adjPct = scenario ? Math.round((basePct + scenario.delta) * 10) / 10 : basePct
   const adjPrice = scenario && projectedPrice ? Math.round(projectedPrice * (1 + scenario.delta / 100)) : projectedPrice
-  const pctColor = adjPct > 0 ? "text-emerald-400" : adjPct < 0 ? "text-red-400" : "text-muted-foreground"
+  const pctColor = adjPct > 0 ? "text-emerald-700" : adjPct < 0 ? "text-red-700" : "text-muted-foreground"
 
   return (
     <div className="bg-card border border-border rounded-xl p-6">
@@ -351,11 +351,11 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
         {SCENARIOS.map(s => (
           <button key={s.key} onClick={() => setActive(active === s.key ? null : s.key)}
             className={`text-left p-3 rounded-lg border text-xs transition-all ${
-              active === s.key ? "bg-accent/10 border-accent/30 text-accent-foreground" : "bg-muted/50 border-border text-muted-foreground hover:border-zinc-600"
+              active === s.key ? "bg-amber-50 border-amber-300 text-accent-foreground" : "bg-muted/50 border-border text-muted-foreground hover:border-stone-400"
             }`}>
             <div className="font-semibold mb-0.5">{s.label}</div>
-            <div className="text-zinc-600 text-[10px]">{s.desc}</div>
-            <div className={`text-[10px] font-bold mt-1 ${s.delta > 0 ? "text-emerald-400" : "text-red-400"}`}>
+            <div className="text-muted-foreground text-[10px]">{s.desc}</div>
+            <div className={`text-[10px] font-bold mt-1 ${s.delta > 0 ? "text-emerald-700" : "text-red-700"}`}>
               {s.delta > 0 ? "+" : ""}{s.delta}%
             </div>
           </button>
@@ -366,11 +366,11 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
           <p className="text-xs text-muted-foreground mb-2">{scenario ? `Under: ${scenario.label}` : "Base forecast"}</p>
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[10px] text-zinc-600 uppercase tracking-wide">90-Day Forecast</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">90-Day Forecast</p>
               <p className="text-2xl font-bold text-foreground">${adjPrice?.toLocaleString() ?? "-"}</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] text-zinc-600 uppercase tracking-wide">Change</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Change</p>
               <p className={`text-xl font-bold ${pctColor}`}>{adjPct > 0 ? "+" : ""}{adjPct}%</p>
             </div>
           </div>
@@ -380,7 +380,7 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
   )
 }
 
-/* ── Main Component ────────────────────────────────────────────────────────── */
+/* ── Main Component ───────────────────────────────────────────────────���────── */
 export default function AnalyzePage() {
   const [form, setForm] = useState({ make: "", model: "", year: "", mileage: 50000, condition: "good", region: "california" })
   const [result, setResult] = useState<any>(null)
@@ -458,9 +458,9 @@ export default function AnalyzePage() {
     .sort((a: any, b: any) => b.impact - a.impact)
 
   const tooltipStyle = {
-    contentStyle: { background: "#0a0a0a", border: "1px solid #27272a", borderRadius: "8px", fontSize: 12 },
-    labelStyle: { color: "#fafafa" },
-    itemStyle: { color: "#a1a1aa" },
+    contentStyle: { background: "#faf7f2", border: "1px solid #ddd5c6", borderRadius: "8px", fontSize: 12 },
+    labelStyle: { color: "#1a1611" },
+    itemStyle: { color: "#78716c" },
   }
 
   return (
@@ -472,9 +472,9 @@ export default function AnalyzePage() {
           <div className="flex items-center gap-2 text-accent-foreground text-xs font-semibold uppercase tracking-widest mb-3">
             <Sparkles size={12} />
             <span>8-Agent Pipeline</span>
-            <span className="text-zinc-600">{"/"}</span>
+            <span className="text-muted-foreground">{"/"}</span>
             <span>XGBoost</span>
-            <span className="text-zinc-600">{"/"}</span>
+            <span className="text-muted-foreground">{"/"}</span>
             <span>Prophet</span>
           </div>
           <h1 className="text-3xl font-bold text-foreground tracking-tight mb-1 text-balance">
@@ -543,11 +543,11 @@ export default function AnalyzePage() {
                 disabled={loading || !form.make || !form.model || !form.year}
                 className={`flex items-center gap-2 px-7 py-2.5 rounded-lg font-semibold text-sm transition-all ${
                   loading || !form.make || !form.model || !form.year
-                    ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
-                    : "bg-accent hover:bg-blue-400 text-foreground"
+                    ? "bg-stone-300 text-stone-500 cursor-not-allowed"
+                    : "bg-accent hover:bg-amber-600 text-card"
                 }`}>
                 {loading
-                  ? <><div className="w-3.5 h-3.5 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin" />{ANALYSIS_STAGES[stage]}</>
+                  ? <><div className="w-3.5 h-3.5 border-2 border-card/30 border-t-card rounded-full animate-spin" />{ANALYSIS_STAGES[stage]}</>
                   : <><Search size={15} />Analyze Now</>
                 }
               </button>
@@ -561,10 +561,10 @@ export default function AnalyzePage() {
             {/* Quick demo strip */}
             {!loading && (
               <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mr-1">Quick demo:</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mr-1">Quick demo:</span>
                 {DEMO_VEHICLES.map(demo => (
                   <button key={demo.label} onClick={() => loadDemo(demo)}
-                    className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-zinc-600 transition-all">
+                    className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-stone-400 transition-all">
                     <span>{demo.label}</span>
                     <span className={`text-[9px] font-bold ${demo.tagColor}`}>{demo.tag}</span>
                   </button>
@@ -626,7 +626,7 @@ export default function AnalyzePage() {
                       <div className="flex flex-col items-center">
                         <p className="text-xl font-bold text-foreground">{riskScore}</p>
                         <p className="text-[10px] text-muted-foreground">Risk Score</p>
-                        <p className="text-[9px] text-zinc-600">/ 100</p>
+                        <p className="text-[9px] text-muted-foreground">/ 100</p>
                       </div>
                     </>
                   )}
@@ -634,7 +634,7 @@ export default function AnalyzePage() {
                 {chg90d !== undefined && (
                   <div className="mt-3 flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2 border border-border">
                     <span className="text-xs text-muted-foreground">90-day forecast</span>
-                    <span className={`text-sm font-bold ${chg90d > 0 ? "text-emerald-400" : chg90d < 0 ? "text-red-400" : "text-muted-foreground"}`}>
+                    <span className={`text-sm font-bold ${chg90d > 0 ? "text-emerald-700" : chg90d < 0 ? "text-red-700" : "text-muted-foreground"}`}>
                       {chg90d > 0 ? "+" : ""}{chg90d}%
                     </span>
                   </div>
@@ -646,12 +646,12 @@ export default function AnalyzePage() {
                   { icon: DollarSign, label: "Predicted Fair Value", color: "text-foreground",
                     value: result.predicted_price ? <>${<AnimatedNumber value={result.predicted_price} />}</> : "-",
                     sub: "XGBoost model / 262k training listings" },
-                  { icon: TrendingUp, label: "90-Day Projected Price", color: projPrice ? (chg90d! >= 0 ? "text-emerald-400" : "text-red-400") : "text-muted-foreground",
+                  { icon: TrendingUp, label: "90-Day Projected Price", color: projPrice ? (chg90d! >= 0 ? "text-emerald-700" : "text-red-700") : "text-muted-foreground",
                     value: projPrice ? <>${projPrice.toLocaleString()}</> : "N/A",
                     sub: uncRange ? `Range: $${uncRange.low?.toLocaleString()} - $${uncRange.high?.toLocaleString()}` : "" },
                   { icon: Package, label: "Active Listings", color: "text-foreground",
                     value: mktCtx?.current_inventory_count ?? "-", sub: mktCtx ? `${mktCtx.inventory_trend} trend` : "" },
-                  { icon: Activity, label: "vs Market Median", color: mktCtx ? (mktCtx.price_vs_median_pct < 0 ? "text-emerald-400" : "text-red-400") : "text-muted-foreground",
+                  { icon: Activity, label: "vs Market Median", color: mktCtx ? (mktCtx.price_vs_median_pct < 0 ? "text-emerald-700" : "text-red-700") : "text-muted-foreground",
                     value: mktCtx ? `${mktCtx.price_vs_median_pct > 0 ? "+" : ""}${mktCtx.price_vs_median_pct}%` : "-",
                     sub: mktCtx ? (mktCtx.price_vs_median_pct < 0 ? "Below market - good deal" : "Above market median") : "" },
                 ].map(({ icon: Icon, label, color, value, sub }) => (
@@ -686,14 +686,14 @@ export default function AnalyzePage() {
                           <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                      <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#71717a" }} />
-                      <YAxis tickFormatter={(v: number) => v ? `$${(v/1000).toFixed(0)}k` : ""} tick={{ fontSize: 10, fill: "#71717a" }} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" />
+                      <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#78716c" }} />
+                      <YAxis tickFormatter={(v: number) => v ? `$${(v/1000).toFixed(0)}k` : ""} tick={{ fontSize: 10, fill: "#78716c" }} />
                       <Tooltip {...tooltipStyle} formatter={(v: any, n: string) => v ? [`$${Number(v).toLocaleString()}`, n] : [null, null]} />
                       <Legend wrapperStyle={{ color: "#71717a", fontSize: 11 }} />
                       {chartData.some((d: any) => d.historical) && (
-                        <ReferenceLine x="Now" stroke="#3f3f46" strokeDasharray="4 4"
-                          label={{ value: "Today", fontSize: 9, fill: "#52525b", position: "top" }} />
+                        <ReferenceLine x="Now" stroke="#c4b9a8" strokeDasharray="4 4"
+                          label={{ value: "Today", fontSize: 9, fill: "#78716c", position: "top" }} />
                       )}
                       <Area type="monotone" dataKey="historical" stroke="#3b82f6" fill="url(#histGrad)"
                         name="Historical avg" connectNulls={false} dot={false} strokeWidth={2} />
@@ -702,7 +702,7 @@ export default function AnalyzePage() {
                     </ComposedChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-48 text-zinc-600 gap-3">
+                  <div className="flex flex-col items-center justify-center h-48 text-muted-foreground gap-3">
                     <Activity size={36} className="opacity-30" />
                     <p className="text-sm font-medium text-muted-foreground">No model-specific price history</p>
                   </div>
@@ -711,11 +711,11 @@ export default function AnalyzePage() {
                   <div className="grid grid-cols-2 gap-3 mt-4">
                     <div className="bg-muted/50 rounded-lg p-3 text-center border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-1">30-Day Forecast</p>
-                      <p className="text-lg font-bold text-emerald-400">${Number(result.forecast_30d).toLocaleString()}</p>
+                      <p className="text-lg font-bold text-emerald-700">${Number(result.forecast_30d).toLocaleString()}</p>
                     </div>
                     <div className="bg-muted/50 rounded-lg p-3 text-center border border-border">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-1">90-Day Forecast</p>
-                      <p className="text-lg font-bold text-emerald-300">${Number(result.forecast_90d).toLocaleString()}</p>
+                      <p className="text-lg font-bold text-emerald-700">${Number(result.forecast_90d).toLocaleString()}</p>
                     </div>
                   </div>
                 )}
@@ -731,7 +731,7 @@ export default function AnalyzePage() {
                     {reasoning.map((bullet: string, i: number) => (
                       <div key={i} className="flex gap-2.5">
                         <ChevronRight size={14} className="text-accent-foreground mt-0.5 flex-shrink-0" />
-                        <p className="text-zinc-300 text-sm leading-relaxed">{bullet}</p>
+                        <p className="text-foreground/80 text-sm leading-relaxed">{bullet}</p>
                       </div>
                     ))}
                   </div>
@@ -751,9 +751,9 @@ export default function AnalyzePage() {
                     <div className="space-y-2">
                       {shap.slice(0, 3).map((f: any, i: number) => (
                         <div key={i} className="flex items-center gap-2">
-                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${f.direction === "increases price" ? "bg-emerald-400" : "bg-red-400"}`} />
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${f.direction === "increases price" ? "bg-emerald-600" : "bg-red-600"}`} />
                           <span className="text-xs text-muted-foreground flex-1 capitalize">{f.feature.replace(/_/g, " ")}</span>
-                          <span className={`text-xs font-bold ${f.direction === "increases price" ? "text-emerald-400" : "text-red-400"}`}>
+                          <span className={`text-xs font-bold ${f.direction === "increases price" ? "text-emerald-700" : "text-red-700"}`}>
                             {f.direction === "increases price" ? "+" : "-"}${Math.abs(f.impact).toLocaleString()}
                           </span>
                         </div>
@@ -772,9 +772,9 @@ export default function AnalyzePage() {
                   <p className="text-muted-foreground text-xs mb-4">SHAP values - how each feature shifts the XGBoost price prediction</p>
                   <ResponsiveContainer width="100%" height={220}>
                     <BarChart data={shapChartData} layout="vertical" margin={{ left: 10, right: 20 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={false} />
-                      <XAxis type="number" tick={{ fontSize: 10, fill: "#71717a" }} tickFormatter={(v: number) => v.toFixed(0)} />
-                      <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "#d4d4d8" }} width={110} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#ddd5c6" horizontal={false} />
+                      <XAxis type="number" tick={{ fontSize: 10, fill: "#78716c" }} tickFormatter={(v: number) => v.toFixed(0)} />
+                      <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "#1a1611" }} width={110} />
                       <Tooltip {...tooltipStyle} formatter={(v: any, _: any, p: any) => [v.toFixed(2), p.payload.dir === "increases price" ? "Increases price" : "Decreases price"]} />
                       <Bar dataKey="impact" radius={[0, 4, 4, 0]}>
                         {shapChartData.map((f: any, i: number) => (
@@ -793,7 +793,7 @@ export default function AnalyzePage() {
                     {agentLog ? agentLog.length : "-"} agents
                   </span>
                 </h3>
-                {agentLog && agentLog.length > 0 ? <AgentReasoningLog agentLog={agentLog} /> : <p className="text-zinc-600 text-sm">No agent log available.</p>}
+                {agentLog && agentLog.length > 0 ? <AgentReasoningLog agentLog={agentLog} /> : <p className="text-muted-foreground text-sm">No agent log available.</p>}
               </div>
             </div>
 
@@ -811,18 +811,18 @@ export default function AnalyzePage() {
                   </div>
                 )}
                 {biasStat && (
-                  <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-5">
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <AlertCircle size={14} className="text-amber-400" />
-                      <h4 className="text-amber-300 font-semibold text-sm">Bias Statement</h4>
+                      <AlertCircle size={14} className="text-amber-700" />
+                      <h4 className="text-amber-800 font-semibold text-sm">Bias Statement</h4>
                     </div>
-                    <p className="text-amber-200/70 text-xs leading-relaxed">{biasStat}</p>
+                    <p className="text-amber-700/80 text-xs leading-relaxed">{biasStat}</p>
                   </div>
                 )}
                 {ethicsDiscl && (
                   <div className="bg-card border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <Shield size={14} className="text-emerald-400" />
+                      <Shield size={14} className="text-emerald-700" />
                       <h4 className="text-foreground font-semibold text-sm">Ethics Disclaimer</h4>
                     </div>
                     <p className="text-muted-foreground text-xs leading-relaxed">{ethicsDiscl}</p>
@@ -838,34 +838,34 @@ export default function AnalyzePage() {
           <div className="mt-12 animate-fade-in">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-card border border-border rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Search size={28} className="text-zinc-600" />
+                <Search size={28} className="text-muted-foreground" />
               </div>
-              <h3 className="text-zinc-300 font-semibold text-xl text-balance">Select a vehicle above - or try a demo</h3>
-              <p className="text-zinc-600 text-sm mt-1.5 max-w-md mx-auto">
+              <h3 className="text-foreground font-semibold text-xl text-balance">Select a vehicle above - or try a demo</h3>
+              <p className="text-muted-foreground text-sm mt-1.5 max-w-md mx-auto">
                 Live demos show BUY NOW / WAIT / MONITOR across different market signals
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
               {DEMO_VEHICLES.map(demo => (
                 <button key={demo.label} onClick={() => loadDemo(demo)}
-                  className="group text-left bg-card hover:bg-muted/50 border border-border hover:border-zinc-600 rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5">
+                  className="group text-left bg-card hover:bg-muted/50 border border-border hover:border-stone-400 rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5">
                   <div className="flex items-start justify-between mb-3">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                      demo.tag === "BUY NOW" ? "bg-emerald-500/15 text-emerald-400" :
-                      demo.tag === "WAIT" ? "bg-red-500/15 text-red-400" :
-                      "bg-amber-500/15 text-amber-400"
+                      demo.tag === "BUY NOW" ? "bg-emerald-100 text-emerald-700" :
+                      demo.tag === "WAIT" ? "bg-red-100 text-red-700" :
+                      "bg-amber-100 text-amber-700"
                     }`}>{demo.tag}</span>
                   </div>
                   <p className="text-foreground text-sm font-semibold leading-tight">{demo.label}</p>
                   <p className="text-muted-foreground text-[11px] leading-snug mt-1">{demo.desc}</p>
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
                     <span className={`text-[11px] font-bold ${demo.tagColor}`}>{demo.stat}</span>
-                    <ChevronRight size={12} className="text-zinc-600 group-hover:text-muted-foreground transition-colors" />
+                    <ChevronRight size={12} className="text-border group-hover:text-muted-foreground transition-colors" />
                   </div>
                 </button>
               ))}
             </div>
-            <p className="text-center text-zinc-700 text-xs mt-6">
+            <p className="text-center text-muted-foreground text-xs mt-6">
               Demo results use pre-built agent logs - real vehicle queries hit the live 8-agent pipeline
             </p>
           </div>

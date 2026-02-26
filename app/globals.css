@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
-  --foreground: #fafafa;
-  --card: #0a0a0a;
-  --card-foreground: #fafafa;
-  --border: #27272a;
-  --muted: #18181b;
-  --muted-foreground: #a1a1aa;
-  --accent: #3b82f6;
-  --accent-foreground: #60a5fa;
+  --background: #f5f0e8;
+  --foreground: #1a1611;
+  --card: #faf7f2;
+  --card-foreground: #1a1611;
+  --border: #ddd5c6;
+  --muted: #ece5d8;
+  --muted-foreground: #78716c;
+  --accent: #b45309;
+  --accent-foreground: #92400e;
   --radius: 0.75rem;
 }
 
@@ -20,20 +20,20 @@ body {
   color: var(--foreground);
 }
 
-/* Custom dark scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: var(--border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #c4b9a8;
 }
 
 /* Hide scrollbar for nav */

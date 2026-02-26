@@ -1,0 +1,297 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import {
+  Shield, Eye, Scale, Lock, CheckCircle, AlertCircle,
+  User, Bot, ArrowRight, RefreshCw, ThumbsUp, ThumbsDown,
+  FileText, Zap,
+} from "lucide-react"
+
+const HITL_STEPS = [
+  { id: 1, Icon: Bot, color: "#6366f1", title: "AI Generates Recommendation", desc: "7-agent pipeline runs XGBoost + Prophet + GPT-4o-mini to produce a BUY NOW / WAIT / MONITOR signal with confidence score, risk assessment, and reasoning.", badge: "Automated", badgeColor: "bg-indigo-100 text-indigo-700" },
+  { id: 2, Icon: Eye, color: "#2563eb", title: "Transparency Layer", desc: "Every recommendation includes confidence %, volatility level, uncertainty range, forecast method label, and 3-bullet reasoning -- so humans can evaluate the evidence.", badge: "Transparent", badgeColor: "bg-blue-100 text-blue-700" },
+  { id: 3, Icon: User, color: "#b45309", title: "Human Reviews Evidence", desc: "The buyer sees the full agent reasoning log, SHAP factors, bias statement, and scenario simulations. They can run what-if analyses before deciding.", badge: "Human Review", badgeColor: "bg-amber-100 text-amber-700" },
+  { id: 4, Icon: CheckCircle, color: "#15803d", title: "Human Makes Final Decision", desc: "AI output is advisory only. The human decides whether to act, modify the search, or seek a second opinion. No autonomous purchasing or commitment.", badge: "Human Decision", badgeColor: "bg-emerald-100 text-emerald-700" },
+  { id: 5, Icon: RefreshCw, color: "#7c3aed", title: "Feedback Loop", desc: "Users can flag incorrect recommendations. This feedback improves future model calibration and helps identify regional data gaps or systematic biases.", badge: "Continuous Learning", badgeColor: "bg-purple-100 text-purple-700" },
+]
+
+const PILLARS = [
+  { Icon: Eye, color: "#2563eb", title: "Transparency", items: ["Confidence score displayed for every recommendation (0-100%)", "Uncertainty range shown as price band (+/-4-14% depending on volatility)", "Forecast method labeled: Prophet / XGBoost / LLM-Blended / Industry Estimate", "Full agent reasoning log visible to every user", "SHAP factors explain what drives each price prediction"] },
+  { Icon: Scale, color: "#b45309", title: "Accountability", items: ["\"AI recommendation is advisory only -- not financial advice\" on every result", "DecisionAgent uses auditable rule-based logic -- no black-box LLM routing", "Every recommendation traces back to exact numerical thresholds", "EthicsAgent generates per-vehicle bias disclosure statements", "Agent reasoning log provides a complete audit trail"] },
+  { Icon: Shield, color: "#15803d", title: "Fairness", items: ["Model uses only: make, model, year, mileage, condition, region", "No income, credit score, demographic, or personal data collected", "Price intelligence available equally to all users -- no paywalled tiers", "Regional data coverage across 50+ US states and markets", "Bias statement flags when training data underrepresents a vehicle segment"] },
+  { Icon: Lock, color: "#7c3aed", title: "Privacy", items: ["No user accounts, login, or personal data required", "Search queries not stored or linked to individuals", "Vehicle queries processed in-memory and not retained", "No third-party tracking or advertising data collection", "MongoDB stores only market price data -- zero user PII"] },
+]
+
+const FAIRNESS_ROWS = [
+  { feature: "User income / net worth", used: false, reason: "Not relevant to market price" },
+  { feature: "Credit score", used: false, reason: "Financing is separate from market value" },
+  { feature: "Race / ethnicity", used: false, reason: "Protected attribute -- never collected" },
+  { feature: "Age / gender", used: false, reason: "Protected attribute -- never collected" },
+  { feature: "ZIP code / neighborhood", used: false, reason: "Only broad region used (state-level)" },
+  { feature: "Car make / model / year", used: true, reason: "Core vehicle identity" },
+  { feature: "Mileage (odometer)", used: true, reason: "Primary depreciation factor (SHAP #1)" },
+  { feature: "Vehicle condition", used: true, reason: "Market price determinant" },
+  { feature: "Region (state-level)", used: true, reason: "Regional supply/demand signal" },
+  { feature: "Historical market prices", used: true, reason: "Time-series trend data from MongoDB" },
+]
+
+const DEMO_RESULT = {
+  vehicle: "2021 Honda Civic", recommendation: "BUY NOW", confidence: 79, change: "+2.4%", volatility: "Low", risk: 22,
+  reasoning: ["Civic prices rising 2.4% over 90 days with low market volatility.", "Limited compact sedan inventory driving upward price pressure nationally.", "79% confidence signal from blended XGBoost + Prophet + LLM analysis."],
+  bias: "Honda Civic is well-represented in training data -- below-average model uncertainty.",
+}
+
+export default function EthicsPage() {
+  const [activeStep, setActiveStep] = useState(1)
+  const [reviewDecision, setReviewDecision] = useState<string | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setActiveStep(s => (s < HITL_STEPS.length ? s + 1 : 1)), 3000)
+    return () => clearTimeout(t)
+  }, [activeStep])
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero */}
+      <div className="border-b border-border bg-muted/30">
+        <div className="max-w-7xl mx-auto px-6 py-10">
+          <div className="flex items-center gap-2 text-emerald-700 text-xs font-semibold uppercase tracking-widest mb-3">
+            <Shield size={12} />
+            Principled AI / Responsible AI Spark Challenge
+          </div>
+          <h1 className="text-3xl font-bold text-foreground tracking-tight mb-1 text-balance">
+            Responsible <span className="text-emerald-700">AI Design</span>
+          </h1>
+          <p className="text-muted-foreground text-sm max-w-2xl leading-relaxed">
+            CarIntel is built on four pillars of responsible AI: Transparency, Accountability, Fairness, and Privacy. Humans remain in the decision loop -- AI provides evidence, not commands.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            {[
+              { label: "Protected Attributes Used", value: "0", color: "text-emerald-700", icon: Shield },
+              { label: "Confidence Score Displayed", value: "100%", color: "text-blue-700", icon: Eye },
+              { label: "Audit Trail Steps", value: "9", color: "text-purple-700", icon: FileText },
+              { label: "Advisory Only", value: "Yes", color: "text-amber-700", icon: Scale },
+            ].map(({ label, value, color, icon: Icon }) => (
+              <div key={label} className="bg-card border border-border rounded-xl p-4 text-center">
+                <Icon size={18} className={`${color} mx-auto mb-2`} />
+                <p className={`text-3xl font-black ${color}`}>{value}</p>
+                <p className="text-muted-foreground text-xs mt-1">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* Human-in-the-Loop */}
+        <div className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <User size={18} className="text-accent" />
+            <h2 className="text-lg font-bold text-foreground">Human-in-the-Loop Architecture</h2>
+          </div>
+          <p className="text-muted-foreground text-sm mb-6">AI generates evidence -- humans make decisions. Click any step to explore.</p>
+          <div className="flex flex-wrap gap-3 mb-6">
+            {HITL_STEPS.map(step => (
+              <button key={step.id} onClick={() => setActiveStep(step.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                  activeStep === step.id ? "bg-amber-50 border-amber-300 text-foreground" : "bg-muted/50 border-border text-muted-foreground hover:border-stone-400"
+                }`}>
+                <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: activeStep === step.id ? step.color + "22" : "#ece5d8" }}>
+                  <span style={{ color: activeStep === step.id ? step.color : "#78716c" }}>{step.id}</span>
+                </div>
+                {step.title.split(" ").slice(0, 2).join(" ")}
+              </button>
+            ))}
+          </div>
+          {HITL_STEPS.map(step => step.id === activeStep && (
+            <div key={step.id} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-muted/50 border border-border rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: step.color + "15" }}>
+                    <step.Icon size={24} style={{ color: step.color }} />
+                  </div>
+                  <div>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${step.badgeColor}`}>{step.badge}</span>
+                    <h3 className="text-foreground font-bold text-lg mt-0.5">{step.title}</h3>
+                  </div>
+                </div>
+                <p className="text-foreground/80 leading-relaxed">{step.desc}</p>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="space-y-3 w-full max-w-xs">
+                  {HITL_STEPS.map((s, i) => (
+                    <div key={s.id} className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${s.id <= activeStep ? "opacity-100" : "opacity-30"}`} style={{ background: s.color + (s.id <= activeStep ? "22" : "08") }}>
+                        <s.Icon size={14} style={{ color: s.id <= activeStep ? s.color : "#78716c" }} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="h-1.5 rounded-full bg-border overflow-hidden">
+                          <div className="h-1.5 rounded-full transition-all duration-700" style={{ width: s.id < activeStep ? "100%" : s.id === activeStep ? "60%" : "0%", background: s.color }} />
+                        </div>
+                      </div>
+                      {i < HITL_STEPS.length - 1 && <ArrowRight size={10} className="text-muted-foreground flex-shrink-0" />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Interactive AI Review */}
+        <div className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Zap size={18} className="text-accent" />
+            <h2 className="text-lg font-bold text-foreground">Interactive: Review an AI Decision</h2>
+          </div>
+          <p className="text-muted-foreground text-sm mb-6">This is how CarIntel presents AI analysis for human review.</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-muted/50 border border-border rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Bot size={16} className="text-blue-700" />
+                <span className="text-sm font-semibold text-blue-700">AI Agent Output</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200 font-semibold">Advisory Only</span>
+              </div>
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-muted-foreground text-xs">Vehicle</p>
+                  <p className="text-foreground font-bold text-lg">{DEMO_RESULT.vehicle}</p>
+                </div>
+                <div className="bg-emerald-700 text-card font-black text-xl px-4 py-2 rounded-xl">{DEMO_RESULT.recommendation}</div>
+              </div>
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                {[
+                  { label: "Confidence", value: `${DEMO_RESULT.confidence}%`, color: "text-blue-700" },
+                  { label: "90-Day Change", value: DEMO_RESULT.change, color: "text-emerald-700" },
+                  { label: "Risk Score", value: DEMO_RESULT.risk + "/100", color: "text-emerald-700" },
+                ].map(m => (
+                  <div key={m.label} className="bg-card rounded-lg p-3 text-center border border-border">
+                    <p className={`text-xl font-bold ${m.color}`}>{m.value}</p>
+                    <p className="text-muted-foreground text-xs mt-0.5">{m.label}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-2 mb-4">
+                {DEMO_RESULT.reasoning.map((r, i) => (
+                  <div key={i} className="flex gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0" />
+                    <p className="text-foreground/80 text-sm">{r}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-amber-700/80 text-xs"><span className="font-semibold text-amber-800">Bias note: </span>{DEMO_RESULT.bias}</p>
+              </div>
+            </div>
+            <div className="bg-muted/50 border border-amber-200 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <User size={16} className="text-accent" />
+                <span className="text-sm font-semibold text-accent">Your Decision</span>
+              </div>
+              <p className="text-muted-foreground text-xs mb-4">The AI recommends BUY NOW. You{"'"}ve reviewed the evidence. What do you decide?</p>
+              <div className="space-y-2 mb-4">
+                {[
+                  { label: "Accept AI recommendation", key: "accept", bg: "bg-emerald-50 border-emerald-200 text-emerald-700" },
+                  { label: "Need more information", key: "more", bg: "bg-blue-50 border-blue-200 text-blue-700" },
+                  { label: "Override -- will wait", key: "wait", bg: "bg-amber-50 border-amber-200 text-amber-700" },
+                  { label: "Reject -- different car", key: "reject", bg: "bg-red-50 border-red-200 text-red-700" },
+                ].map(opt => (
+                  <button key={opt.key} onClick={() => { setReviewDecision(opt.key); setShowFeedback(false) }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                      reviewDecision === opt.key ? opt.bg : "bg-card border-border text-muted-foreground hover:border-stone-400"
+                    }`}>{opt.label}</button>
+                ))}
+              </div>
+              {reviewDecision && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-700">
+                  {reviewDecision === "accept" && "You accepted the AI recommendation. Remember: this is your decision, not the AI's."}
+                  {reviewDecision === "more" && "Good choice. Explore the scenario simulator or compare regional prices before deciding."}
+                  {reviewDecision === "wait" && "You've overridden the AI. Human judgment prevails -- the AI was advisory only."}
+                  {reviewDecision === "reject" && "Perfectly valid. AI recommendations are one input among many."}
+                </div>
+              )}
+              {reviewDecision && !showFeedback && (
+                <button onClick={() => setShowFeedback(true)} className="mt-3 text-xs text-muted-foreground hover:text-foreground underline w-full text-center">Was this AI prediction helpful? Give feedback</button>
+              )}
+              {showFeedback && (
+                <div className="mt-3 space-y-2">
+                  <p className="text-xs text-muted-foreground">Rate the AI recommendation quality:</p>
+                  <div className="flex gap-2">
+                    <button className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-emerald-50 text-emerald-700 text-xs hover:bg-emerald-100 transition-colors border border-emerald-200"><ThumbsUp size={12} /> Helpful</button>
+                    <button className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-red-50 text-red-700 text-xs hover:bg-red-100 transition-colors border border-red-200"><ThumbsDown size={12} /> Not helpful</button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground text-center">Feedback improves future recommendations</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Four Pillars */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {PILLARS.map(pillar => (
+            <div key={pillar.title} className="bg-card border border-border rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: pillar.color + "15" }}>
+                  <pillar.Icon size={20} style={{ color: pillar.color }} />
+                </div>
+                <h3 className="text-foreground font-bold text-lg">{pillar.title}</h3>
+              </div>
+              <ul className="space-y-2.5">
+                {pillar.items.map((item, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <CheckCircle size={14} className="flex-shrink-0 mt-0.5" style={{ color: pillar.color }} />
+                    <span className="text-foreground/80 text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Fairness Audit */}
+        <div className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Scale size={18} className="text-emerald-700" />
+            <h2 className="text-lg font-bold text-foreground">Fairness: Feature Audit</h2>
+          </div>
+          <p className="text-muted-foreground text-sm mb-5">CarIntel makes no decisions based on who you are -- only on market data about the vehicle.</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2.5 text-muted-foreground font-medium">Feature</th>
+                  <th className="text-center py-2.5 text-muted-foreground font-medium">Used in Model</th>
+                  <th className="text-left py-2.5 text-muted-foreground font-medium">Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                {FAIRNESS_ROWS.map((row, i) => (
+                  <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                    <td className="py-2.5 text-foreground">{row.feature}</td>
+                    <td className="py-2.5 text-center">
+                      {row.used
+                        ? <span className="inline-flex items-center gap-1 text-emerald-700 text-xs font-semibold"><CheckCircle size={12} /> Yes</span>
+                        : <span className="inline-flex items-center gap-1 text-red-700 text-xs font-semibold"><AlertCircle size={12} /> No</span>}
+                    </td>
+                    <td className="py-2.5 text-muted-foreground text-xs">{row.reason}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Ethics disclaimer */}
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center">
+          <Shield size={24} className="text-emerald-700 mx-auto mb-3" />
+          <h3 className="text-foreground font-bold text-lg mb-2">AI Recommendations Are Advisory Only</h3>
+          <p className="text-muted-foreground text-sm max-w-2xl mx-auto">
+            CarIntel provides data-driven price intelligence for informational purposes only. Recommendations are generated by machine learning models and AI analysis -- not human financial advice. Always verify with a licensed dealer or independent inspection before purchasing any vehicle.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
