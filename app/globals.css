@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f5f0e8;
+  --foreground: #1a1611;
+  --card: #faf7f2;
+  --card-foreground: #1a1611;
+  --border: #ddd5c6;
+  --muted: #ece5d8;
+  --muted-foreground: #78716c;
+  --accent: #b45309;
+  --accent-foreground: #92400e;
+  --radius: 0.75rem;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c4b9a8;
+}
+
+/* Hide scrollbar for nav */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-in-out both;
+  }
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out both;
+  }
+}
