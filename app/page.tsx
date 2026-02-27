@@ -516,14 +516,7 @@ export default function AnalyzePage() {
       clearInterval(stageTimer)
 
       if (!res.ok) {
-        const msg = data?.error || `Server returned ${res.status}`
-        if (res.status === 503) {
-          setError(
-            "The analysis backend is not connected. Please ensure the FastAPI server is running and environment variables (OPENAI_API_KEY, MONGO_URI) are configured. Try one of the demo vehicles below in the meantime."
-          )
-        } else {
-          setError(msg)
-        }
+        setError("Search not in database, please try different parameters.")
         setLoading(false)
         return
       }
@@ -532,9 +525,7 @@ export default function AnalyzePage() {
       setLoading(false)
     } catch {
       clearInterval(stageTimer)
-      setError(
-        "Could not reach the analysis service. Please check that the backend is running and your environment variables are set. You can still try the demo vehicles below."
-      )
+      setError("Search not in database, please try different parameters.")
       setLoading(false)
     }
   }
@@ -700,12 +691,9 @@ export default function AnalyzePage() {
       <div className="max-w-7xl mx-auto px-6 pb-12">
 
         {error && (
-          <div className="mt-6 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-fade-in">
-            <AlertCircle size={18} className="text-red-600 mt-0.5 shrink-0" />
-            <div>
-              <p className="text-red-700 font-semibold text-sm">Analysis Unavailable</p>
-              <p className="text-red-600/80 text-sm mt-0.5">{error}</p>
-            </div>
+          <div className="mt-6 flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-fade-in">
+            <AlertCircle size={18} className="text-red-600 shrink-0" />
+            <p className="text-red-700 font-semibold text-sm">Error: {error}</p>
           </div>
         )}
 
