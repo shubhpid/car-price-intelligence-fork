@@ -1,5 +1,5 @@
 {
-  "name": "car-price-intelligence",
+  "name": "vroomly",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

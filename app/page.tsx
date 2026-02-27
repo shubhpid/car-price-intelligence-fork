@@ -380,7 +380,7 @@ function ScenarioPanel({ basePct, projectedPrice }: { basePct: number; projected
   )
 }
 
-/* ── Main Component ───────────────────────────────────────────────────���────── */
+/* ── Main Component ─────────────────────────────────────────────────���─���────── */
 export default function AnalyzePage() {
   const [form, setForm] = useState({ make: "", model: "", year: "", mileage: 50000, condition: "good", region: "california" })
   const [result, setResult] = useState<any>(null)
@@ -478,7 +478,7 @@ export default function AnalyzePage() {
             <span>Prophet</span>
           </div>
           <h1 className="text-3xl font-bold text-foreground tracking-tight mb-1 text-balance">
-            AI Car Price Intelligence
+            Vroomly Price Intelligence
           </h1>
           <p className="text-muted-foreground text-sm mb-8 max-w-2xl leading-relaxed">
             Multi-agent decision intelligence with transparent BUY / WAIT / MONITOR signals, explainable AI reasoning, risk assessment, and ethical guardrails.
