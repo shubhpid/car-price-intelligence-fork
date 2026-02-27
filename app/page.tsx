@@ -480,6 +480,11 @@ export default function AnalyzePage() {
 
   async function analyze() {
     if (!form.make || !form.model || !form.year) return
+
+    // Always clear previous results and errors first
+    setError(null)
+    setResult(null)
+
     const key = `${form.make}|${form.model}|${form.year}`
     const staticData = DEMO_DATA_MAP[key]
 
@@ -490,8 +495,6 @@ export default function AnalyzePage() {
     }
 
     // Otherwise call the backend API
-    setError(null)
-    setResult(null)
     setLoading(true)
     setStage(0)
 
@@ -511,7 +514,6 @@ export default function AnalyzePage() {
         region: form.region,
       })
       const res = await fetch(`/api/predict?${params.toString()}`)
-      const data = await res.json()
 
       clearInterval(stageTimer)
 
@@ -521,6 +523,7 @@ export default function AnalyzePage() {
         return
       }
 
+      const data = await res.json()
       setResult(data)
       setLoading(false)
     } catch {
