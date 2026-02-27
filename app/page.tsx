@@ -478,12 +478,64 @@ export default function AnalyzePage() {
     }
   }
 
-  function analyze() {
+  async function analyze() {
     if (!form.make || !form.model || !form.year) return
     const key = `${form.make}|${form.model}|${form.year}`
     const staticData = DEMO_DATA_MAP[key]
+
+    // Use demo data if available
     if (staticData) {
       loadDemo({ ...form, year: +form.year })
+      return
+    }
+
+    // Otherwise call the backend API
+    setError(null)
+    setResult(null)
+    setLoading(true)
+    setStage(0)
+
+    let s = 0
+    const stageTimer = setInterval(() => {
+      s = Math.min(s + 1, ANALYSIS_STAGES.length - 1)
+      setStage(s)
+    }, 380)
+
+    try {
+      const params = new URLSearchParams({
+        make: form.make,
+        model: form.model,
+        year: form.year,
+        mileage: String(form.mileage),
+        condition: form.condition,
+        region: form.region,
+      })
+      const res = await fetch(`/api/predict?${params.toString()}`)
+      const data = await res.json()
+
+      clearInterval(stageTimer)
+
+      if (!res.ok) {
+        const msg = data?.error || `Server returned ${res.status}`
+        if (res.status === 503) {
+          setError(
+            "The analysis backend is not connected. Please ensure the FastAPI server is running and environment variables (OPENAI_API_KEY, MONGO_URI) are configured. Try one of the demo vehicles below in the meantime."
+          )
+        } else {
+          setError(msg)
+        }
+        setLoading(false)
+        return
+      }
+
+      setResult(data)
+      setLoading(false)
+    } catch {
+      clearInterval(stageTimer)
+      setError(
+        "Could not reach the analysis service. Please check that the backend is running and your environment variables are set. You can still try the demo vehicles below."
+      )
+      setLoading(false)
     }
   }
 
@@ -648,11 +700,11 @@ export default function AnalyzePage() {
       <div className="max-w-7xl mx-auto px-6 pb-12">
 
         {error && (
-          <div className="mt-6 flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/25 rounded-xl animate-fade-in">
-            <AlertCircle size={18} className="text-red-400 mt-0.5 shrink-0" />
+          <div className="mt-6 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-fade-in">
+            <AlertCircle size={18} className="text-red-600 mt-0.5 shrink-0" />
             <div>
-              <p className="text-red-400 font-semibold text-sm">Analysis Failed</p>
-              <p className="text-red-300/80 text-sm mt-0.5">{error}</p>
+              <p className="text-red-700 font-semibold text-sm">Analysis Unavailable</p>
+              <p className="text-red-600/80 text-sm mt-0.5">{error}</p>
             </div>
           </div>
         )}
